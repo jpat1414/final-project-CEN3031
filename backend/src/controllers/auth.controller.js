@@ -100,7 +100,30 @@ async function login(req, res) {
   }
 }
 
+async function getCurrentUser(req, res) {
+  try {
+    const user = await authService.findUserById(req.user.userId);
+
+    if (!user) {
+      return res.status(404).json({
+        message: "User not found",
+      });
+    }
+
+    return res.status(200).json({
+      user,
+    });
+  } catch (err) {
+    console.error("Get current user error:", err);
+
+    return res.status(500).json({
+      message: "Internal server error",
+    });
+  }
+}
+
 module.exports = {
   register,
   login,
+  getCurrentUser,
 };
